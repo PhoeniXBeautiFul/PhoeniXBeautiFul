@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuoAcc Free</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #58CC02;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+            font-weight: bold;
+        }
+        .navbar a.locked {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #58CC02;
+            text-align: center;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #58CC02;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a029;
+        }
+        .account {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .account img.avatar {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .account .info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .account .info img.status {
+            width: 25px;
+            height: 25px;
+            margin-bottom: 5px;
+        }
+        .account .info span {
+            font-size: 14px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 2px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #58CC02;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="#" id="acc-link" class="locked">Acc Duolingo</a>
+</div>
+
+<div class="container" id="login-form">
+    <h2>Đăng Nhập</h2>
+    <input type="email" id="login-email" placeholder="Email" required>
+    <input type="password" id="login-password" placeholder="Mật khẩu" required>
+    <button onclick="login()">Đăng Nhập</button>
+    <div class="toggle-link" onclick="toggleForms()">Chưa có tài khoản? Đăng ký ngay</div>
+</div>
+
+<div class="container hidden" id="register-form">
+    <h2>Đăng Ký</h2>
+    <input type="text" id="register-name" placeholder="Tên" required>
+    <input type="email" id="register-email" placeholder="Email" required>
+    <input type="password" id="register-password" placeholder="Mật khẩu" required>
+    <input type="password" id="register-confirm-password" placeholder="Xác nhận mật khẩu" required>
+    <button onclick="register()">Đăng Ký</button>
+    <div class="toggle-link" onclick="toggleForms()">Đã có tài khoản? Đăng nhập</div>
+</div>
+
+<div class="container hidden" id="duolingo-accounts">
+    <h2>Acc Duolingo</h2>
+
+    <div class="account">
+        <img src="https://simg-ssl.duolingo.com/avatars/1537548863/lt0aTDnl8z/medium" alt="Avatar 1" class="avatar">
+        <div class="info">
+            <span>Ta Là Đom Đóm Đây!</span>
+            <img src="https://d35aaqx5ub95lt.cloudfront.net/images/profile/01ce3a817dd01842581c3d18debcbc46.svg" alt="Status" class="status">
+            <span>Đang cày</span>
+        </div>
+    </div>
+
+    <div class="account">
+        <img src="https://simg-ssl.duolingo.com/avatars/1537592776/jd0SjVBo7f/medium" alt="Avatar 2" class="avatar">
+        <div class="info">
+            <span>Hội Cự Giải Đâu?</span>
+            <img src="https://d35aaqx5ub95lt.cloudfront.net/images/profile/01ce3a817dd01842581c3d18debcbc46.svg" alt="Status" class="status">
+            <span>Đang cày</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleForms() {
+        var loginForm = document.getElementById('login-form');
+        var registerForm = document.getElementById('register-form');
+        loginForm.classList.toggle('hidden');
+        registerForm.classList.toggle('hidden');
+    }
+
+    function register() {
+        var name = document.getElementById('register-name').value;
+        var email = document.getElementById('register-email').value;
+        var password = document.getElementById('register-password').value;
+        var confirmPassword = document.getElementById('register-confirm-password').value;
+
+        if (password !== confirmPassword) {
+            alert("Mật khẩu không khớp!");
+            return;
+        }
+
+        // Check if email already exists
+        if (localStorage.getItem("duoacc-email") === email) {
+            alert("Email đã được sử dụng!");
+            return;
+        }
+
+        localStorage.setItem("duoacc-name", name);
+        localStorage.setItem("duoacc-email", email);
+        localStorage.setItem("duoacc-password", password);
+
+        alert("Đăng ký thành công! Bây giờ bạn có thể đăng nhập.");
+        toggleForms();
+    }
+
+    function login() {
+        var email = document.getElementById('login-email').value;
+        var password = document.getElementById('login-password').value;
+
+        var storedEmail = localStorage.getItem("duoacc-email");
+        var storedPassword = localStorage.getItem("duoacc-password");
+
+        if (email === storedEmail && password === storedPassword) {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('duolingo-accounts').classList.remove('hidden');
+            document.getElementById('acc-link').classList.remove('locked');
+            document.getElementById('acc-link').href = "#duolingo-accounts";
+        } else {
+            alert("Thông tin đăng nhập không đúng!");
+        }
+    }
+</script>
+
+</body>
+</html>
